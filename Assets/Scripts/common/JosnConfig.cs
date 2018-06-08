@@ -39,7 +39,7 @@ public class JsonConfig
     public void SaveToFile(string path)
     {
         string s = ToJson();
-        Y3Tools.CheckFileExists(path, true);
+        Tools.CheckFileExists(path, true);
         File.WriteAllText(path, s, Encoding.UTF8);
 #if UNITY_EDITOR
         AssetDatabase.Refresh();

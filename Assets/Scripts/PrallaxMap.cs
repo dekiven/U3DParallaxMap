@@ -27,7 +27,8 @@ public class PrallaxMap : MonoBehaviour
     }
 }
 
-public class ParallaxMapdData
+public class ParallaxMapdData : JsonConfig
 {
-    
+    public string LeftID;
+    public string RightId;
 }

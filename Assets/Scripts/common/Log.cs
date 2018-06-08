@@ -20,7 +20,7 @@ public class LogFile
 
     public static void Init(string filePath, LogLevel minLevel = LogLevel.L_Log)
     {
-        Y3Tools.CheckFileExists(filePath, true);
+        Tools.CheckFileExists(filePath, true);
         mMinLevel = minLevel;
         FileStream stream = new FileStream(filePath, FileMode.Create);
         mSWriter = new StreamWriter(stream);

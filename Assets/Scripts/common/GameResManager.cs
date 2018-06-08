@@ -9,7 +9,31 @@ using UnityEditor;
 using UnityEngine;
 using UObj = UnityEngine.Object;
 
+#if USE_TOLUA
 using LuaInterface;
+#else
+public class LuaFunction{
+    public void Call(object obj)
+    {
+
+    }
+    public void Call(object[] objs)
+    {
+        
+    }
+    public void Dispose()
+    {
+        
+    }
+}
+public class LuaByteBuffer{
+    public LuaByteBuffer(byte[] bytes)
+    {
+        
+    }
+}
+#endif
+
 
 //载入方式参考LuaFramework_UGUI->ResourceManager.cs
 //github: https://github.com/jarjin/LuaFramework_UGUI
@@ -99,7 +123,7 @@ public class GameResManager : MonoBehaviour
             List<string> names = new List<string>();
             foreach (var item in assetNames)
             {
-                names.Add(Y3Tools.PathCombine("Assets/" + GameConfig.STR_RES_FOLDER, path, item));
+                names.Add(Tools.PathCombine("Assets/" + GameConfig.STR_RES_FOLDER, path, item));
             }
             assetNames = names.ToArray();
         }
@@ -179,40 +203,41 @@ public class GameResManager : MonoBehaviour
 
     IEnumerator OnLoadAssetBundle(string abName, Type type)
     {
-        string url = Y3Tools.GetAsbUrl(abName);
+        yield return null;
+        //string url = Tools.GetAsbUrl(abName);
 
-        WWW download = null;
-        if (type == typeof(AssetBundleManifest))
-            download = new WWW(url);
-        else
-        {
-            string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
-            if (dependencies.Length > 0)
-            {
-                m_Dependencies.Add(abName, dependencies);
-                for (int i = 0; i < dependencies.Length; i++)
-                {
-                    string depName = dependencies[i];
-                    AssetBundleInfo bundleInfo = null;
-                    if (m_LoadedAssetBundles.TryGetValue(depName, out bundleInfo))
-                    {
-                        bundleInfo.m_ReferencedCount++;
-                    }
-                    else if (!m_LoadRequests.ContainsKey(depName))
-                    {
-                        yield return StartCoroutine(OnLoadAssetBundle(depName, type));
-                    }
-                }
-            }
-            download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(abName), 0);
-        }
-        yield return download;
+        //WWW download = null;
+        //if (type == typeof(AssetBundleManifest))
+        //    download = new WWW(url);
+        //else
+        //{
+        //    string[] dependencies = m_AssetBundleManifest.GetAllDependencies(abName);
+        //    if (dependencies.Length > 0)
+        //    {
+        //        m_Dependencies.Add(abName, dependencies);
+        //        for (int i = 0; i < dependencies.Length; i++)
+        //        {
+        //            string depName = dependencies[i];
+        //            AssetBundleInfo bundleInfo = null;
+        //            if (m_LoadedAssetBundles.TryGetValue(depName, out bundleInfo))
+        //            {
+        //                bundleInfo.m_ReferencedCount++;
+        //            }
+        //            else if (!m_LoadRequests.ContainsKey(depName))
+        //            {
+        //                yield return StartCoroutine(OnLoadAssetBundle(depName, type));
+        //            }
+        //        }
+        //    }
+        //    download = WWW.LoadFromCacheOrDownload(url, m_AssetBundleManifest.GetAssetBundleHash(abName), 0);
+        //}
+        //yield return download;
 
-        AssetBundle assetObj = download.assetBundle;
-        if (assetObj != null)
-        {
-            m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(assetObj));
-        }
+        //AssetBundle assetObj = download.assetBundle;
+        //if (assetObj != null)
+        //{
+        //    m_LoadedAssetBundles.Add(abName, new AssetBundleInfo(assetObj));
+        //}
     }
 
     AssetBundleInfo GetLoadedAssetBundle(string abName)
@@ -328,7 +353,7 @@ public class GameResManager : MonoBehaviour
         List<string> names = new List<string>();
         foreach (var name in assetNames)
         {
-            names.Add(Y3Tools.PathCombine("Assets/" + GameConfig.STR_RES_FOLDER, path, name));
+            names.Add(Tools.PathCombine("Assets/" + GameConfig.STR_RES_FOLDER, path, name));
         }
         StartCoroutine(onLoadRes<T>(names.ToArray(), action, luaFunc));
     }
@@ -392,19 +417,19 @@ public class GameResManager : MonoBehaviour
         }
 //#endif
         {
-            abName = Y3Tools.GetAsbName(abName);
-            LoadAsset<T>(
-                abName
-                , new string[] { name, }
-                , delegate(UObj[] objs)
-                {
-                    if (null != action && objs.Length == 1)
-                    {
-                        action(objs[0]);
-                    }
-                }
-                , luaFunc
-            );
+            //abName = Tools.GetAsbName(abName);
+            //LoadAsset<T>(
+            //    abName
+            //    , new string[] { name, }
+            //    , delegate(UObj[] objs)
+            //    {
+            //        if (null != action && objs.Length == 1)
+            //        {
+            //            action(objs[0]);
+            //        }
+            //    }
+            //    , luaFunc
+            //);
         }
     }
 
@@ -425,8 +450,8 @@ public class GameResManager : MonoBehaviour
         }
 //#endif
         {
-            abName = Y3Tools.GetAsbName(abName);
-            LoadAsset<T>(abName, names, action, luaFunc);
+            //abName = Tools.GetAsbName(abName);
+            //LoadAsset<T>(abName, names, action, luaFunc);
         }
     }
 
