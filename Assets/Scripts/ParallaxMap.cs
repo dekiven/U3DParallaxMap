@@ -17,6 +17,8 @@ public class ParallaxMap : MonoBehaviour
     public float CurHeight = 5f;
     //地平线位置
     public float HorizontalHeight = 1.2f;
+    // 摄像机看向的视差节点位置（默认以玩家为中心）
+    public float FoucsPosX = 0f;
 
 
     /**
@@ -28,8 +30,7 @@ public class ParallaxMap : MonoBehaviour
      *玩家层：玩家所在层，道路、可交互的建筑等都在这个层 ,这个层的idx为1
      *近景层：将玩家遮挡的层， 定义该层的深度和在list的index最小（0）
      **/
-    public int LayerCount = 6;
-    //public const string[] LayerNames = new string[6]{"distantBg", "1", "2", "3", "4", "5"};
+    public int LayerCount = Enum.GetNames(typeof(ParallaxLayerEnum)).Length;
 
 
     //视差节点层
@@ -37,6 +38,8 @@ public class ParallaxMap : MonoBehaviour
     //当前地图数据
     private ParallaxMapdData mCurMapData;
     private float mDistance;
+    //test
+    public float ScreenWidth;
     //-----------------------------------------------------------------------properties end-------------------------------------------------------------------------
 
     //=======================================================================u3d funcs begin=======================================================================
@@ -48,6 +51,9 @@ public class ParallaxMap : MonoBehaviour
             MainCamera = Camera.main;
         }
         MainCamera.orthographic = true;
+
+        //test
+        test();
     }
 
     void Update()
@@ -63,6 +69,7 @@ public class ParallaxMap : MonoBehaviour
         //    updateCamera();
         //}
         updateCamera();
+        FoucsLeft();
     }
     //-----------------------------------------------------------------------u3d funcs end-------------------------------------------------------------------------
 
@@ -96,7 +103,7 @@ public class ParallaxMap : MonoBehaviour
         }
     }
 
-    public bool SetMapData(ParallaxMapdData data, Action<bool> callback)
+    public bool SetMapData(ParallaxMapdData data, Action<bool> callback=null)
     {
         if (null == data)
         {
@@ -107,23 +114,46 @@ public class ParallaxMap : MonoBehaviour
     }
 
     //移动map的焦点（玩家所在位置，一般情况先玩家在地图中居中，但玩家可能会移动到地图左右两个边缘）
-    public bool MoveFocus(Vector2 offset)
+    public bool MoveFocus(float offset)
     {
-        //TODO:
+        FoucsPosX += offset;
+        return FoucsTo(FoucsPosX);
+    }
+
+    public bool FoucsTo(float posX)
+    {
+        if (mDistance < ScreenWidth) 
+        {
+            Debug.LogError("mDistance < ScreenWith, use a larger one!");
+            return false;
+        }
+        posX = Mathf.Clamp(posX, ScreenWidth / 2, mDistance - ScreenWidth / 2);
+        FoucsPosX = posX;
         foreach (ParallaxLayer layer in mLayers)
         {
-            layer.MoveBy(offset);
+            layer.FoucsTo(posX);
         }
         return true;
+    }
+
+    public bool FoucsLeft()
+    {
+        return FoucsTo(0f);
+    }
+
+    public bool FoucsRight()
+    {
+        return FoucsTo(mDistance);
     }
     //-----------------------------------------------------------------------public funcs end-------------------------------------------------------------------------
 
     //=======================================================================private funcs begin=======================================================================
-    private IEnumerator startSetMapData(ParallaxMapdData data, Action<bool> callback)
+    private IEnumerator startSetMapData(ParallaxMapdData data, Action<bool> callback=null)
     {
-        string leftID = data.LeftID;
-        string rightID = data.RightID;
-        float distance = data.Distance;
+        mCurMapData = data;
+        //string leftID = mCurMapData.LeftID;
+        //string rightID = mCurMapData.RightID;
+        mDistance = mCurMapData.Distance;
 
         for (int i = 0; i < mLayers.Count; ++i)
         {
@@ -142,37 +172,34 @@ public class ParallaxMap : MonoBehaviour
 
     private void updateCamera()
     {
+        if (null == mCurMapData)
+        {
+            return;
+        }
+        ScreenWidth = CurHeight * MainCamera.aspect;
+
         CurHeight = Mathf.Clamp(CurHeight, MinHeight,MaxHeight);
         var pos = MainCamera.transform.position;
         var size = CurHeight / 2;
         pos.y = HorizontalHeight + size * (1f-(HorizontalHeight / MaxHeight) * 2);
         MainCamera.transform.position = pos;
         MainCamera.orthographicSize = size;
+
+        FoucsTo(FoucsPosX);
     }
     //-----------------------------------------------------------------------private funcs end-------------------------------------------------------------------------
-
-}
-
-public class ParallaxItemData : JsonConfig
-{
-    public string ID;
-    //public string Type;
-    //public string Name;
-    public Vector2 Pos;
-    //public string Res;
-    //public float Rotate;
-}
-
-public class ParallaxMapdData : JsonConfig
-{
-    public string LeftID;
-    public string RightID;
-    public float Distance;
-
-    public List<ParallaxItemData> SepecialItems;
-}
-
-public class ParallaxLayerData : JsonConfig
-{
-    public List<ParallaxItemData> Items;
+    //test
+    private void test()
+    {
+        //test
+        //var data = ParallaxMapdData.LoadFromFile()
+        var data = new ParallaxMapdData();
+        //data.ID = "testMap";
+        data.Distance = 100f;
+        data.LeftID = "left_test_1";
+        data.RightID = "right_test_1";
+        data.SepecialItems = new List<ParallaxItemData>();
+        //data.SaveToFile(Tools.GetResFullPath("conf/map/test/test1.json"));
+        SetMapData(data);
+    }
 }

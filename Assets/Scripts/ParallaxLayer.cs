@@ -11,6 +11,8 @@ public class ParallaxLayer : MonoBehaviour {
     public string LeftID = "";
     public string RightID = "";
 
+    private ParallaxLayerData mCurData;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -26,15 +28,16 @@ public class ParallaxLayer : MonoBehaviour {
         
     }
 
-    public void SetLayerData(ParallaxLayerData data, float distance, Action<bool> callbcak)
+    public void SetLayerData(ParallaxLayerData data, Action<bool> callback = null)
     {
-        Distance = distance;
-
+        StartCoroutine(startSetLayerData(data, callback));
     }
 
-    public void MoveBy(Vector2 offset)
+    public void FoucsTo(float posX)
     {
-        
+        var pos = transform.position;
+        pos.x = posX * MoveScale;
+        transform.position = pos;
     }
 
     public static ParallaxLayer NewLayerObj(Transform parent, string name)
@@ -46,12 +49,18 @@ public class ParallaxLayer : MonoBehaviour {
         return layer;
     }
 
-    private IEnumerator startSetLayerData(ParallaxLayerData data, float distance, Action<bool> callbcak)
+    private IEnumerator startSetLayerData(ParallaxLayerData data, Action<bool> callback = null)
     {
+        mCurData = data;
+        Distance = data.Distance;
         for (int i = 0; i < data.Items.Count; ++i )
         {
             var d = data.Items[i];
         }
         yield return null;
+        if (null != callback)
+        {
+            callback(true);
+        }
     }
 }

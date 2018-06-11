@@ -206,4 +206,18 @@ public class Tools
     //    }
         
     //}
+
+    public static string GetResFullPath(string subPath=null)
+    {
+        string path = PathCombine(Application.dataPath, GameConfig.STR_RES_FOLDER);
+        if (string.IsNullOrEmpty(subPath))
+        {
+            return path;
+        }
+        else
+        {
+            return PathCombine(path, subPath);
+        }
+            
+    }
 }
