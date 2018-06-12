@@ -7,8 +7,8 @@ ignoreList = [
     'UnityPackageManager/',
     'obj/',
     '.vs/',
-    'Travel.csproj',
-    'Travel.sln',
+    '*.csproj',
+    '*.sln',
 ]
 
 f = open('.gitignore', 'w')

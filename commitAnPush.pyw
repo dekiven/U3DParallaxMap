@@ -69,7 +69,7 @@ def __onCommit(msg) :
         return
 
     os.chdir(curDir)
-    rst = tryCmd('''git add *.*
+    rst = tryCmd('''git add *
 git commit -m "%s"
 git push
 '''%(msg))
