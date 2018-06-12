@@ -58,18 +58,18 @@ public class ParallaxMap : MonoBehaviour
 
     void Update()
     {
-        //if (Input.GetKeyUp("1"))
-        //{
-        //    CurHeight += 0.1f;
-        //    updateCamera();
-        //}
-        //if (Input.GetKeyUp("2"))
-        //{
-        //    CurHeight -= 0.1f;
-        //    updateCamera();
-        //}
+        if (Input.GetKeyUp("1"))
+        {
+            FoucsPosX += 1f;
+            FoucsTo(FoucsPosX);
+        }
+        if (Input.GetKeyUp("2"))
+        {
+            FoucsPosX -= 1f;
+            FoucsTo(FoucsPosX);
+        }
         updateCamera();
-        FoucsLeft();
+        //FoucsLeft();
     }
     //-----------------------------------------------------------------------u3d funcs end-------------------------------------------------------------------------
 
@@ -77,20 +77,20 @@ public class ParallaxMap : MonoBehaviour
     public bool InitMap()
     {
         mLayers = new List<ParallaxLayer>();
-        for (int i = LayerCount - 1; i >= 0; --i)
+        for (int i = 0; i < LayerCount; ++i)
         {
             ParallaxLayer layer = null;
             if (1 == i)
             {
-                layer = ParallaxPlayerLayer.NewLayerObj(transform, "layer_" + i);
+                layer = Tools.NewComponentObj<ParallaxPlayerLayer>(transform, ((ParallaxLayerEnum)i).ToString());
             }
             else
             {
-                layer = ParallaxLayer.NewLayerObj(transform, "layer_" + i);
+                layer = Tools.NewComponentObj<ParallaxLayer>(transform, ((ParallaxLayerEnum)i).ToString());
             }
             layer.Depth = i;
+            layer.transform.localPosition = new Vector3(0, 0, i);
             mLayers.Add(layer);
-
         }
         return true;
     }
@@ -127,7 +127,7 @@ public class ParallaxMap : MonoBehaviour
             Debug.LogError("mDistance < ScreenWith, use a larger one!");
             return false;
         }
-        posX = Mathf.Clamp(posX, ScreenWidth / 2, mDistance - ScreenWidth / 2);
+        posX = Mathf.Clamp(posX, ScreenWidth / 2 - mDistance, -ScreenWidth / 2);
         FoucsPosX = posX;
         foreach (ParallaxLayer layer in mLayers)
         {
@@ -155,14 +155,20 @@ public class ParallaxMap : MonoBehaviour
         //string rightID = mCurMapData.RightID;
         mDistance = mCurMapData.Distance;
 
+        //创建地图
+        var layerDatas = mCurMapData.GenLayerDatas(new EnviromentData());
+
         for (int i = 0; i < mLayers.Count; ++i)
         {
             ParallaxLayer layer = mLayers[i];
-            //TODO:根据地图配置调整layer移动比例
-            layer.MoveScale = LayerCount - i;
-        }
-        //TODO:创建地图
+            //根据地图配置调整layer移动比例
+            layer.MoveScale = ParallaxConst.LayerScales[i];
 
+            layer.SetLayerData(layerDatas[i]);
+            yield return null;
+        }
+
+        FoucsLeft();
         if (null != callback)
         {
             callback(true);
@@ -176,16 +182,21 @@ public class ParallaxMap : MonoBehaviour
         {
             return;
         }
-        ScreenWidth = CurHeight * MainCamera.aspect;
-
-        CurHeight = Mathf.Clamp(CurHeight, MinHeight,MaxHeight);
-        var pos = MainCamera.transform.position;
         var size = CurHeight / 2;
-        pos.y = HorizontalHeight + size * (1f-(HorizontalHeight / MaxHeight) * 2);
-        MainCamera.transform.position = pos;
-        MainCamera.orthographicSize = size;
 
-        FoucsTo(FoucsPosX);
+        if (!Equals(MainCamera.orthographicSize, size))
+        {
+            ScreenWidth = CurHeight * MainCamera.aspect * 2;
+
+            CurHeight = Mathf.Clamp(CurHeight, MinHeight, MaxHeight);
+            var pos = MainCamera.transform.position;
+            pos.y = HorizontalHeight + size * (1f - (HorizontalHeight / MaxHeight) * 2);
+            MainCamera.transform.position = pos;
+
+            FoucsTo(FoucsPosX);
+
+            MainCamera.orthographicSize = size;
+        }
     }
     //-----------------------------------------------------------------------private funcs end-------------------------------------------------------------------------
     //test
@@ -193,6 +204,36 @@ public class ParallaxMap : MonoBehaviour
     {
         //test
         //var data = ParallaxMapdData.LoadFromFile()
+
+        //GameResManager.Instance.LoadRes<TextAsset>("conf/map/test", new string[] { "test.json" }, delegate (UObj[] objs) {
+        //    var sdic = new Dictionary<string, Sprite>();
+        //    if (objs.Length > 0)
+        //    {
+        //        foreach (var s in objs)
+        //        {
+        //            var ss = s as Sprite;
+        //            if (null != ss)
+        //            {
+        //                Debug.Log(ss.name);
+        //                sdic[ss.name] = ss;
+        //            }
+        //        }
+        //    }
+        //    for (int i = 0; i < data.Items.Count; ++i)
+        //    {
+
+        //        var d = data.Items[i];
+        //        var sprite = Tools.NewComponentObj<SpriteRenderer>(transform, "bg_" + i);
+
+        //        sprite.transform.position = d.Pos;
+        //        Sprite s;
+        //        if (sdic.TryGetValue(d.ID, out s))
+        //        {
+        //            sprite.sprite = s;
+        //        }
+        //    }
+        //});
+
         var data = new ParallaxMapdData();
         //data.ID = "testMap";
         data.Distance = 100f;

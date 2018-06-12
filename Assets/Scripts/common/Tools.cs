@@ -220,4 +220,18 @@ public class Tools
         }
             
     }
+
+    public static T NewComponentObj<T>(Transform parent, string name = null) where T : UnityEngine.Component
+    {
+        if(string.IsNullOrEmpty(name))
+        {
+            name = typeof(T).ToString();
+        }
+        var obj = new GameObject(name);
+        obj.transform.SetParent(parent);
+        obj.transform.localScale = Vector3.one;
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
+        return obj.AddComponent<T>();
+    }
 }

@@ -354,6 +354,7 @@ public class GameResManager : MonoBehaviour
         foreach (var name in assetNames)
         {
             names.Add(Tools.PathCombine("Assets/" + GameConfig.STR_RES_FOLDER, path, name));
+            //Debug.Log(names[names.Count - 1]);
         }
         StartCoroutine(onLoadRes<T>(names.ToArray(), action, luaFunc));
     }

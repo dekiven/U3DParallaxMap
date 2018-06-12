@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UObj = UnityEngine.Object;
 
 public class ParallaxLayer : MonoBehaviour {
 
@@ -53,10 +54,38 @@ public class ParallaxLayer : MonoBehaviour {
     {
         mCurData = data;
         Distance = data.Distance;
-        for (int i = 0; i < data.Items.Count; ++i )
+        if(data.Items.Count > 0)
         {
-            var d = data.Items[i];
+            GameResManager.Instance.LoadRes<Sprite>("textures/map/mapBg", new string[] { "fb2bg0.png", "fb2bg1.png", "fb2bg2.png" }, delegate (UObj[] objs) {
+                var sdic = new Dictionary<string, Sprite>();
+                if (objs.Length > 0)
+                {
+                    foreach (var s in objs)
+                    {
+                        var ss = s as Sprite;
+                        if (null != ss)
+                        {
+                            //Debug.Log(ss.name);
+                            sdic[ss.name] = ss;
+                        }
+                    }
+                }
+                for (int i = 0; i < data.Items.Count; ++i)
+                {
+                    
+                    var d = data.Items[i];
+                    var sprite = Tools.NewComponentObj<SpriteRenderer>(transform, "bg_" + i);
+
+                    sprite.transform.localPosition = d.Pos;
+                    Sprite s; 
+                    if (sdic.TryGetValue(d.ID, out s))
+                    {
+                        sprite.sprite = s;
+                    }
+                }
+            });
         }
+
         yield return null;
         if (null != callback)
         {

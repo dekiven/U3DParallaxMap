@@ -18,6 +18,24 @@ public enum ParallaxLayerEnum
     L_Bg,
 }
 
+public class ParallaxConst
+{
+    public static readonly float[] LayerScales = { 1.2f, 1f, 0.8f, 0.5f, 0.2f, 0f };
+
+    ////离屏幕最近的层
+    //public const float ScaleNear = 1.2f;
+    ////玩家所在层
+    //public const float ScalePlayer = 1f;
+    ////中景层，建筑等
+    //public const float ScaleMiddle = 0.8f;
+    ////远景层，山、云等
+    //public const float ScaleFar = 0.5f;
+    ////天空层，太阳月亮等
+    //public const float ScaleSky = 0.2f;
+    ////最远层，固
+    //public const float ScaleBg = 0f;
+}
+
 //地图上Sprite等的数据
 public class ParallaxItemData : JsonConfig
 {
@@ -35,15 +53,21 @@ public class ParallaxMapdData : JsonConfig
     public string LeftID;
     public string RightID;
     public float Distance;
+    public int Index;
 
     public List<ParallaxItemData> SepecialItems;
 
-    public ParallaxLayerData GenLayerData(int indx, EnviromentData data)
+    public ParallaxMapdData()
+    {
+        SepecialItems = new List<ParallaxItemData>();
+    }
+
+    public ParallaxLayerData GenLayerData(int index, EnviromentData data)
     {
         ParallaxLayerData layerData = new ParallaxLayerData();
         layerData.Distance = Distance;
-        var items = new List<ParallaxItemData>();
-        var idx = (ParallaxLayerEnum)Enum.ToObject(typeof(ParallaxLayerEnum), indx);
+        Index = index;
+        var idx = (ParallaxLayerEnum)Enum.ToObject(typeof(ParallaxLayerEnum), index);
         switch(idx)
         {
             case ParallaxLayerEnum.L_Bg :
@@ -65,13 +89,17 @@ public class ParallaxMapdData : JsonConfig
                 genNearData(data, ref layerData);
                 break;
         }
-        layerData.Items = items;
+
         return layerData;
     }
 
     public List<ParallaxLayerData> GenLayerDatas(EnviromentData data)
     {
         List<ParallaxLayerData> layerDatas = new List<ParallaxLayerData>();
+        for (int i = 0; i < Enum.GetNames(typeof(ParallaxLayerEnum)).Length; i++)
+        {
+            layerDatas.Add(GenLayerData(i, data));
+        }
         return layerDatas;
     }
 
@@ -100,6 +128,16 @@ public class ParallaxMapdData : JsonConfig
             Debug.Log("哈哈哈哈，环境数据没有用");
         }
         //TODO:
+        //test 测试代码，正式版本使用配置的数据
+        float w = 10.24f;
+        int count = (int)Math.Ceiling(Distance * ParallaxConst.LayerScales[Index] / w);
+        for (int i = 0; i < count; ++i)
+        {
+            var itemData = new ParallaxItemData();
+            itemData.ID = "fb2bg" + i % 3;
+            itemData.Pos = new Vector2((0.5f + i) * w, 2.33f);
+            data.Items.Add(itemData);
+        }
     }
 
     private void genMiddleData(EnviromentData enviromentData, ref ParallaxLayerData data)
@@ -135,6 +173,12 @@ public class ParallaxLayerData : JsonConfig
 {
     public float Distance;
     public List<ParallaxItemData> Items;
+
+
+    public ParallaxLayerData()
+    {
+        Items = new List<ParallaxItemData>();
+    }
 }
 
 

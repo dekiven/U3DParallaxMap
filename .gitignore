@@ -1,0 +1,7 @@
+Library/
+Temp/
+UnityPackageManager/
+obj/
+.vs/
+Travel.csproj
+Travel.sln
