@@ -65,18 +65,21 @@ def __main() :
 def __onCommit(msg) :
     # print('commit:%s'%(msg))
     if msg.strip() == '' :
-        ShowInfoDialog('input msg!')
+        ShowInfoDialog('输入提交信息!')
         return
 
     os.chdir(curDir)
-    rst = tryCmd('''git add *.*
+    rst = tryCmd('''git add .*
 git commit -m "%s"
 git push
 '''%(msg))
-    
-    log = ''
+    # print(rst)
+    if len(rst) == 0 :
+        ShowInfoDialog('使用本工具仅mac上使用！')
+        logLabel.quit()
+    log = 'log:\n'
     for l in rst :
-        log += l
+        log += l+'\n'
     logLabel.set(log)
     
 

@@ -31,7 +31,7 @@ public class GameConfig {
 
     private GameConfig()
     {
-        LoadConfig();
+        //LoadConfig();
     }
 
     public static GameConfig Instance
