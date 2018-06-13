@@ -234,4 +234,27 @@ public class Tools
         obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
         return obj.AddComponent<T>();
     }
+
+    /// <summary>
+    /// 反序列化json字符串。
+    /// 需要第三方的 SimpleJson.cs 文件。
+    /// </summary>
+    /// <typeparam name="T">反序列化后的类型，可以是容器或类</typeparam>
+    /// <param name="json">json字符串</param>
+    /// <returns></returns>
+    public static T DeserializeJson<T>(string json)
+    {
+        return SimpleJson.SimpleJson.DeserializeObject<T>(json);
+    }
+
+    /// <summary>
+    /// 将数据序列化为json字符串。
+    /// 需要第三方的 SimpleJson.cs 文件。
+    /// </summary>
+    /// <param name="data">要序列化的数据</param>
+    /// <returns></returns>
+    public static string SerializeObject(object data)
+    {
+        return SimpleJson.SimpleJson.SerializeObject(data);
+    }
 }
