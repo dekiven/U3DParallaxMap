@@ -31,7 +31,7 @@ public class ParallaxMap : MonoBehaviour
      *近景层：将玩家遮挡的层， 定义该层的深度和在list的index最小（0）
      **/
     public int LayerCount = Enum.GetNames(typeof(ParallaxLayerEnum)).Length;
-
+    private ObjDataManager mDataManager;
 
     //视差节点层
     private List<ParallaxLayer> mLayers;
@@ -42,7 +42,15 @@ public class ParallaxMap : MonoBehaviour
     public float ScreenWidth;
     //-----------------------------------------------------------------------properties end-------------------------------------------------------------------------
 
+
     //=======================================================================u3d funcs begin=======================================================================
+
+    private void Awake()
+    {
+        mDataManager = ObjDataManager.Instance;
+        mDataManager.LoadDatas("conf/obj/objAll.json");
+    }
+
     void Start()
     {
         InitMap();
@@ -240,7 +248,17 @@ public class ParallaxMap : MonoBehaviour
         data.LeftID = "left_test_1";
         data.RightID = "right_test_1";
         data.SepecialItems = new List<ParallaxItemData>();
-        //data.SaveToFile(Tools.GetResFullPath("conf/map/test/test1.json"));
+        var id = new ParallaxItemData();
+        id.ID = "testId";
+        id.Pos = Vector2.one;
+        data.SepecialItems.Add(id);
+        data.SaveToFile(Tools.GetResFullPath("conf/map/test/test1.json"));
         SetMapData(data);
+        Debug.Log(data.ToJson());
+        //var objData = new ObjData();
+        //objData.ID = "map_bg_fb2bg0";
+        //objData.Name = "背景2_0";
+        //objData.Sprite = "textures/map/mapBg/fb2bg0.png";
+        //objData.SaveToFile(Tools.GetResFullPath("conf/obj/bg/2_0.json"));
     }
 }

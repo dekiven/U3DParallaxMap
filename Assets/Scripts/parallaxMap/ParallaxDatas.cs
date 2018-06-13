@@ -62,18 +62,23 @@ public class ParallaxMapdData : JsonConfig
         SepecialItems = new List<ParallaxItemData>();
     }
 
+    //public new string ToJson(bool prettyPrint = false)
+    //{
+    //    return JsonUtility.ToJson(this, prettyPrint);
+    //}
+
     public ParallaxLayerData GenLayerData(int index, EnviromentData data)
     {
         ParallaxLayerData layerData = new ParallaxLayerData();
         layerData.Distance = Distance;
         Index = index;
         var idx = (ParallaxLayerEnum)Enum.ToObject(typeof(ParallaxLayerEnum), index);
-        switch(idx)
+        switch (idx)
         {
-            case ParallaxLayerEnum.L_Bg :
+            case ParallaxLayerEnum.L_Bg:
                 genBGData(data, ref layerData);
                 break;
-            case ParallaxLayerEnum.L_Sky :
+            case ParallaxLayerEnum.L_Sky:
                 genSkyData(data, ref layerData);
                 break;
             case ParallaxLayerEnum.L_Far:
