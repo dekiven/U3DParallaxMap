@@ -72,9 +72,13 @@ public class Tools
         return exists;
     }
 
-    public static string RelativeTo(string fullPath, string relative2)
+    public static string RelativeTo(string fullPath, string relative2, bool withParentDir = false)
     {
         fullPath = FormatPathStr(fullPath);
+        if (withParentDir) 
+        {
+            relative2 = Directory.GetParent(relative2).ToString();
+        }
         relative2 = FormatPathStr(relative2);
         if (!relative2.EndsWith("/", System.StringComparison.Ordinal))
         {
@@ -235,26 +239,41 @@ public class Tools
         return obj.AddComponent<T>();
     }
 
-    /// <summary>
-    /// 反序列化json字符串。
-    /// 需要第三方的 SimpleJson.cs 文件。
-    /// </summary>
-    /// <typeparam name="T">反序列化后的类型，可以是容器或类</typeparam>
-    /// <param name="json">json字符串</param>
-    /// <returns></returns>
-    public static T DeserializeJson<T>(string json)
+
+    public static string GetAssetPath(string subPath = "", bool isFullPath = false)
     {
-        return SimpleJson.SimpleJson.DeserializeObject<T>(json);
+        string asset = isFullPath ? Application.dataPath : "Assets" ;
+        if (!string.IsNullOrEmpty(subPath))
+        {
+            asset = PathCombine(asset, subPath);
+        }
+        return asset;
     }
 
-    /// <summary>
-    /// 将数据序列化为json字符串。
-    /// 需要第三方的 SimpleJson.cs 文件。
-    /// </summary>
-    /// <param name="data">要序列化的数据</param>
-    /// <returns></returns>
-    public static string SerializeObject(object data)
+    public static string RelativeToAsset(string fullPath)
     {
-        return SimpleJson.SimpleJson.SerializeObject(data);
+        return RelativeTo(fullPath, Directory.GetParent(Application.dataPath).ToString(), true);
     }
+    ///// <summary>
+    ///// 反序列化json字符串。
+    ///// 需要第三方的 SimpleJson.cs 文件。
+    ///// </summary>
+    ///// <typeparam name="T">反序列化后的类型，可以是容器或类</typeparam>
+    ///// <param name="json">json字符串</param>
+    ///// <returns></returns>
+    //public static T DeserializeJson<T>(string json)
+    //{
+    //    return SimpleJson.SimpleJson.DeserializeObject<T>(json);
+    //}
+
+    ///// <summary>
+    ///// 将数据序列化为json字符串。
+    ///// 需要第三方的 SimpleJson.cs 文件。
+    ///// </summary>
+    ///// <param name="data">要序列化的数据</param>
+    ///// <returns></returns>
+    //public static string SerializeObject(object data)
+    //{
+    //    return SimpleJson.SimpleJson.SerializeObject(data);
+    //}
 }

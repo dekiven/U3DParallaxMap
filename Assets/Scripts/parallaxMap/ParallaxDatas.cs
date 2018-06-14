@@ -37,29 +37,40 @@ public class ParallaxConst
 }
 
 //地图上Sprite等的数据
-public class ParallaxItemData : JsonConfig
+[Serializable]
+public class ParallaxItemData //: BaseConfig
 {
     public string ID;
     //public string Type;
     //public string Name;
+    [SerializeField]
     public Vector2 Pos;
     //public string Res;
     //public float Rotate;
 }
 
 //地图的数据
-public class ParallaxMapdData : JsonConfig
+[CreateAssetMenu(menuName ="Datas/ParallaxMapdData")]
+[Serializable]
+public class ParallaxMapData : BaseConfig
 {
     public string LeftID;
     public string RightID;
     public float Distance;
     public int Index;
 
+    [SerializeField]
     public List<ParallaxItemData> SepecialItems;
+    //public List<string> testList;
 
-    public ParallaxMapdData()
+    public ParallaxMapData()
     {
         SepecialItems = new List<ParallaxItemData>();
+        //testList = new List<string>();
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    testList.Add("string_" + i);
+        //}
     }
 
     //public new string ToJson(bool prettyPrint = false)
@@ -174,7 +185,7 @@ public class ParallaxMapdData : JsonConfig
 }
 
 //地图单层的数据
-public class ParallaxLayerData : JsonConfig
+public class ParallaxLayerData : BaseConfig
 {
     public float Distance;
     public List<ParallaxItemData> Items;

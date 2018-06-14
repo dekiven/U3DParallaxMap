@@ -36,7 +36,7 @@ public class ParallaxMap : MonoBehaviour
     //视差节点层
     private List<ParallaxLayer> mLayers;
     //当前地图数据
-    private ParallaxMapdData mCurMapData;
+    private ParallaxMapData mCurMapData;
     private float mDistance;
     //test
     public float ScreenWidth;
@@ -47,8 +47,9 @@ public class ParallaxMap : MonoBehaviour
 
     private void Awake()
     {
-        mDataManager = ObjDataManager.Instance;
-        mDataManager.LoadDatas("conf/obj/objAll.json");
+        //ObjDataManager.LoadData("conf/obj/objAll.json");
+        //mDataManager = ObjDataManager.Instance;
+        //mDataManager.LoadDatas("conf/obj/objAll.json");
     }
 
     void Start()
@@ -111,7 +112,7 @@ public class ParallaxMap : MonoBehaviour
         }
     }
 
-    public bool SetMapData(ParallaxMapdData data, Action<bool> callback=null)
+    public bool SetMapData(ParallaxMapData data, Action<bool> callback=null)
     {
         if (null == data)
         {
@@ -156,7 +157,7 @@ public class ParallaxMap : MonoBehaviour
     //-----------------------------------------------------------------------public funcs end-------------------------------------------------------------------------
 
     //=======================================================================private funcs begin=======================================================================
-    private IEnumerator startSetMapData(ParallaxMapdData data, Action<bool> callback=null)
+    private IEnumerator startSetMapData(ParallaxMapData data, Action<bool> callback=null)
     {
         mCurMapData = data;
         //string leftID = mCurMapData.LeftID;
@@ -211,54 +212,49 @@ public class ParallaxMap : MonoBehaviour
     private void test()
     {
         //test
-        //var data = ParallaxMapdData.LoadFromFile()
+        //var data = BaseConfig.NewConifg<ParallaxMapData>() as ParallaxMapData;//new ParallaxMapData();
+        ////data.ID = "testMap";
+        //data.Distance = 100f;
+        //data.LeftID = "left_test_1";
+        //data.RightID = "right_test_1";
+        //data.SepecialItems = new List<ParallaxItemData>();
+        //var id = new ParallaxItemData();
+        //id.ID = "testId";
+        //id.Pos = Vector2.one;
+        //data.SepecialItems.Add(id);
+        ////data.SepecialItems.Add(id);
+        ////data.SepecialItems.Add(id);
+        ////data.SaveToFile<ParallaxMapData>(Tools.GetAssetPath("Res/conf/map/test/test1.asset"));
+        //data.SaveToFile("Res/conf/map/test/test1.asset");
+        //SetMapData(data);
+        ////Debug.Log(data.ToJson());
 
-        //GameResManager.Instance.LoadRes<TextAsset>("conf/map/test", new string[] { "test.json" }, delegate (UObj[] objs) {
-        //    var sdic = new Dictionary<string, Sprite>();
-        //    if (objs.Length > 0)
-        //    {
-        //        foreach (var s in objs)
-        //        {
-        //            var ss = s as Sprite;
-        //            if (null != ss)
-        //            {
-        //                Debug.Log(ss.name);
-        //                sdic[ss.name] = ss;
-        //            }
-        //        }
-        //    }
-        //    for (int i = 0; i < data.Items.Count; ++i)
-        //    {
+        ////var objData = new ObjData();
+        ////objData.ID = "map_bg_fb2bg0";
+        ////objData.Name = "背景2_0";
+        ////objData.Sprite = "textures/map/mapBg/fb2bg0.png";
+        ////objData.SaveToFile(Tools.GetResFullPath("conf/obj/bg/2_0.json"));
+        /// 
 
-        //        var d = data.Items[i];
-        //        var sprite = Tools.NewComponentObj<SpriteRenderer>(transform, "bg_" + i);
+        ParallaxMapData data;
+        BaseConfig.LoadFromFile<ParallaxMapData>("conf/map/test", "test1.asset", delegate (ParallaxMapData d)
+        {
 
-        //        sprite.transform.position = d.Pos;
-        //        Sprite s;
-        //        if (sdic.TryGetValue(d.ID, out s))
-        //        {
-        //            sprite.sprite = s;
-        //        }
-        //    }
-        //});
+            data = d;
+            if (null != data)
+            {
+                Debug.Log(data.SepecialItems.Count);
+                foreach (var item in data.SepecialItems)
+                {
+                    Debug.Log(item.ID);
+                }
+            }
+        });
 
-        var data = new ParallaxMapdData();
-        //data.ID = "testMap";
-        data.Distance = 100f;
-        data.LeftID = "left_test_1";
-        data.RightID = "right_test_1";
-        data.SepecialItems = new List<ParallaxItemData>();
-        var id = new ParallaxItemData();
-        id.ID = "testId";
-        id.Pos = Vector2.one;
-        data.SepecialItems.Add(id);
-        data.SaveToFile(Tools.GetResFullPath("conf/map/test/test1.json"));
-        SetMapData(data);
-        Debug.Log(data.ToJson());
-        //var objData = new ObjData();
-        //objData.ID = "map_bg_fb2bg0";
-        //objData.Name = "背景2_0";
-        //objData.Sprite = "textures/map/mapBg/fb2bg0.png";
-        //objData.SaveToFile(Tools.GetResFullPath("conf/obj/bg/2_0.json"));
+        mDataManager = ObjDataManager.Instance;
+        if(null != mDataManager)
+        {
+            Debug.Log(mDataManager.mDatas);
+        }
     }
 }
