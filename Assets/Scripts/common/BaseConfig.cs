@@ -16,7 +16,7 @@ public class BaseConfig : ScriptableObject
 
     public static void LoadFromFile<T>(string asbPath, string fileName, Action<T> action = null) where T : BaseConfig
     {
-        GameResManager.Instance.LoadRes<T>(asbPath, fileName, delegate (UObj obj)
+        GameResManager.Instance.LoadRes<ScriptableObject>(asbPath, fileName, delegate (UObj obj)
         {
             T t = obj as T;
             if (null != obj)
@@ -39,6 +39,7 @@ public class BaseConfig : ScriptableObject
         {
             Tools.CheckFileExists(path, true);
             AssetDatabase.CreateAsset(this as T, Tools.GetAssetPath(path));
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
         else

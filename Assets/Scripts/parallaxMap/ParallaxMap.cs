@@ -47,9 +47,8 @@ public class ParallaxMap : MonoBehaviour
 
     private void Awake()
     {
-        //ObjDataManager.LoadData("conf/obj/objAll.json");
-        //mDataManager = ObjDataManager.Instance;
-        //mDataManager.LoadDatas("conf/obj/objAll.json");
+        mDataManager = ObjDataManager.Instance;
+
     }
 
     void Start()
@@ -165,15 +164,23 @@ public class ParallaxMap : MonoBehaviour
         mDistance = mCurMapData.Distance;
 
         //创建地图
-        var layerDatas = mCurMapData.GenLayerDatas(new EnviromentData());
-
-        for (int i = 0; i < mLayers.Count; ++i)
+        var layerDatas = mCurMapData.GenLayerDatas(BaseConfig.NewConifg<EnviromentData>());
+        int i = mLayers.Count - 1;
+        int curI = -10086;
+        while (i > -1)
         {
-            ParallaxLayer layer = mLayers[i];
-            //根据地图配置调整layer移动比例
-            layer.MoveScale = ParallaxConst.LayerScales[i];
-
-            layer.SetLayerData(layerDatas[i]);
+            if (i != curI)
+            {
+                Debug.Log("set layer :" + i);
+                curI = i;
+                var layer = mLayers[i];
+                //根据地图配置调整layer移动比例
+                layer.MoveScale = ParallaxConst.LayerScales[i];
+                layer.SetLayerData(layerDatas[i], delegate (bool rst) {
+                    i -= 1;
+                    Debug.Log("set layer i -= 1");
+                });
+            }
             yield return null;
         }
 
@@ -212,49 +219,35 @@ public class ParallaxMap : MonoBehaviour
     private void test()
     {
         //test
-        //var data = BaseConfig.NewConifg<ParallaxMapData>() as ParallaxMapData;//new ParallaxMapData();
-        ////data.ID = "testMap";
-        //data.Distance = 100f;
-        //data.LeftID = "left_test_1";
-        //data.RightID = "right_test_1";
-        //data.SepecialItems = new List<ParallaxItemData>();
-        //var id = new ParallaxItemData();
-        //id.ID = "testId";
-        //id.Pos = Vector2.one;
-        //data.SepecialItems.Add(id);
-        ////data.SepecialItems.Add(id);
-        ////data.SepecialItems.Add(id);
-        ////data.SaveToFile<ParallaxMapData>(Tools.GetAssetPath("Res/conf/map/test/test1.asset"));
-        //data.SaveToFile("Res/conf/map/test/test1.asset");
-        //SetMapData(data);
-        ////Debug.Log(data.ToJson());
-
-        ////var objData = new ObjData();
-        ////objData.ID = "map_bg_fb2bg0";
-        ////objData.Name = "背景2_0";
-        ////objData.Sprite = "textures/map/mapBg/fb2bg0.png";
-        ////objData.SaveToFile(Tools.GetResFullPath("conf/obj/bg/2_0.json"));
-        /// 
-
-        ParallaxMapData data;
-        BaseConfig.LoadFromFile<ParallaxMapData>("conf/map/test", "test1.asset", delegate (ParallaxMapData d)
-        {
-
-            data = d;
-            if (null != data)
+        mDataManager.LoadData("conf/obj/test/testObjs.asset", delegate (bool rst) {
+            Debug.Log("load Obj list:" + rst.ToString());
+            if (!rst)
             {
-                Debug.Log(data.SepecialItems.Count);
-                foreach (var item in data.SepecialItems)
+                Debug.LogError("load testObjs.asset failed");   
+                return;
+            }
+            BaseConfig.LoadFromFile<ParallaxMapData>("conf/map/test", "test1.asset", delegate (ParallaxMapData d)
+            {
+                if (null != d)
                 {
-                    Debug.Log(item.ID);
+                    Debug.Log(d.SepecialItems.Count);
+                    foreach (var item in d.SepecialItems)
+                    {
+                        Debug.Log(item.ID);
+                    }
+                    SetMapData(d);
                 }
+                else 
+                {
+                    Debug.LogError("load test1.asset failed");   
+                }
+            });
+
+            //mDataManager = ObjDataManager.Instance;
+            if (null != mDataManager)
+            {
+                Debug.Log(mDataManager.mDatas);
             }
         });
-
-        mDataManager = ObjDataManager.Instance;
-        if(null != mDataManager)
-        {
-            Debug.Log(mDataManager.mDatas);
-        }
     }
 }

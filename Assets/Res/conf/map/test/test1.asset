@@ -11,16 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: test1
   m_EditorClassIdentifier: Assembly-CSharp::ParallaxMapData
-  LeftID: left_test_1
-  RightID: right_test_1
+  LeftID: leftId
+  RightID: rightId
   Distance: 100
-  Index: 0
-  SepecialItems:
-  - ID: testId
-    Pos: {x: 1, y: 1}
-  - ID: testId2
-    Pos: {x: 2, y: 1}
-  - ID: testId3
-    Pos: {x: 3, y: 1}
-  - ID: testId4
-    Pos: {x: 4, y: 1}
+  Index: 5
+  SepecialItems: []

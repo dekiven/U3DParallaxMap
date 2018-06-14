@@ -2,55 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ParallaxLayerEnum
-{
-    //离屏幕最近的层
-    L_Near = 0,
-    //玩家所在层
-    L_Player,
-    //中景层，建筑等
-    L_Middle,
-    //远景层，山、云等
-    L_Far,
-    //天空层，太阳月亮等
-    L_Sky,
-    //最远层，固定的bg
-    L_Bg,
-}
-
-public class ParallaxConst
-{
-    public static readonly float[] LayerScales = { 1.2f, 1f, 0.8f, 0.5f, 0.2f, 0f };
-
-    ////离屏幕最近的层
-    //public const float ScaleNear = 1.2f;
-    ////玩家所在层
-    //public const float ScalePlayer = 1f;
-    ////中景层，建筑等
-    //public const float ScaleMiddle = 0.8f;
-    ////远景层，山、云等
-    //public const float ScaleFar = 0.5f;
-    ////天空层，太阳月亮等
-    //public const float ScaleSky = 0.2f;
-    ////最远层，固
-    //public const float ScaleBg = 0f;
-}
-
-//地图上Sprite等的数据
-[Serializable]
-public class ParallaxItemData //: BaseConfig
-{
-    public string ID;
-    //public string Type;
-    //public string Name;
-    [SerializeField]
-    public Vector2 Pos;
-    //public string Res;
-    //public float Rotate;
-}
-
 //地图的数据
-[CreateAssetMenu(menuName ="Datas/ParallaxMapdData")]
+[CreateAssetMenu(menuName = "Datas/ParallaxMapdData")]
 [Serializable]
 public class ParallaxMapData : BaseConfig
 {
@@ -80,7 +33,7 @@ public class ParallaxMapData : BaseConfig
 
     public ParallaxLayerData GenLayerData(int index, EnviromentData data)
     {
-        ParallaxLayerData layerData = new ParallaxLayerData();
+        ParallaxLayerData layerData = NewConifg<ParallaxLayerData>();
         layerData.Distance = Distance;
         Index = index;
         var idx = (ParallaxLayerEnum)Enum.ToObject(typeof(ParallaxLayerEnum), index);
@@ -150,7 +103,7 @@ public class ParallaxMapData : BaseConfig
         for (int i = 0; i < count; ++i)
         {
             var itemData = new ParallaxItemData();
-            itemData.ID = "fb2bg" + i % 3;
+            itemData.ID = "map_bg_fb2bg" + i % 3;
             itemData.Pos = new Vector2((0.5f + i) * w, 2.33f);
             data.Items.Add(itemData);
         }
@@ -183,18 +136,4 @@ public class ParallaxMapData : BaseConfig
         //TODO:
     }
 }
-
-//地图单层的数据
-public class ParallaxLayerData : BaseConfig
-{
-    public float Distance;
-    public List<ParallaxItemData> Items;
-
-
-    public ParallaxLayerData()
-    {
-        Items = new List<ParallaxItemData>();
-    }
-}
-
 

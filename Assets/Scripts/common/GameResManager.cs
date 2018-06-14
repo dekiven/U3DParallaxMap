@@ -372,9 +372,10 @@ public class GameResManager : MonoBehaviour
 #if UNITY_EDITOR
         foreach (var name in assetNames)
         {
+            Debug.Log("load res:"+name);
             T t = AssetDatabase.LoadAssetAtPath<T>(name);
             list.Add(t);
-            yield return null;
+            //yield return null;
         }
 #endif
         if (null != action)
