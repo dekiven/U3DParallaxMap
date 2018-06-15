@@ -4,25 +4,20 @@ using UnityEngine;
 
 public class ParallaxPlayerLayer : ParallaxLayer
 {
+    public PlayerObj Player;
+    //public ParallaxMap Map;
 
     // Use this for initialization
     void Start()
     {
-
+        Player = Tools.NewComponentObj<PlayerObj>(transform, "PlayerObj");
+        Player.InitByID("");
+        Player.transform.localPosition = new Vector3(1, 3, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public static new ParallaxPlayerLayer NewLayerObj(Transform parent, string name)
-    {
-        GameObject obj = new GameObject();
-        obj.name = name;
-        obj.transform.SetParent(parent);
-        ParallaxPlayerLayer layer = obj.AddComponent<ParallaxPlayerLayer>();
-        return layer;
+        
     }
 }

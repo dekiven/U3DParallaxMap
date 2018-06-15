@@ -37,7 +37,7 @@ public class ParallaxMap : MonoBehaviour
     private List<ParallaxLayer> mLayers;
     //当前地图数据
     private ParallaxMapData mCurMapData;
-    private float mDistance;
+    public float Distance;
     //test
     public float ScreenWidth;
     //-----------------------------------------------------------------------properties end-------------------------------------------------------------------------
@@ -122,36 +122,36 @@ public class ParallaxMap : MonoBehaviour
     }
 
     //移动map的焦点（玩家所在位置，一般情况先玩家在地图中居中，但玩家可能会移动到地图左右两个边缘）
-    public bool MoveFocus(float offset)
+    public float MoveFocus(float offset)
     {
         FoucsPosX += offset;
         return FoucsTo(FoucsPosX);
     }
 
-    public bool FoucsTo(float posX)
+    public float FoucsTo(float posX)
     {
-        if (mDistance < ScreenWidth) 
+        if (Distance < ScreenWidth) 
         {
             Debug.LogError("mDistance < ScreenWith, use a larger one!");
-            return false;
+            return -1;
         }
-        posX = Mathf.Clamp(posX, ScreenWidth / 2 - mDistance, -ScreenWidth / 2);
+        posX = Mathf.Clamp(posX, ScreenWidth / 2, Distance - ScreenWidth / 2);
         FoucsPosX = posX;
         foreach (ParallaxLayer layer in mLayers)
         {
             layer.FoucsTo(posX);
         }
-        return true;
+        return posX;
     }
 
-    public bool FoucsLeft()
+    public float FoucsLeft()
     {
         return FoucsTo(0f);
     }
 
-    public bool FoucsRight()
+    public float FoucsRight()
     {
-        return FoucsTo(mDistance);
+        return FoucsTo(Distance);
     }
     //-----------------------------------------------------------------------public funcs end-------------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ public class ParallaxMap : MonoBehaviour
         mCurMapData = data;
         //string leftID = mCurMapData.LeftID;
         //string rightID = mCurMapData.RightID;
-        mDistance = mCurMapData.Distance;
+        Distance = mCurMapData.Distance;
 
         //创建地图
         var layerDatas = mCurMapData.GenLayerDatas(BaseConfig.NewConifg<EnviromentData>());
@@ -171,14 +171,14 @@ public class ParallaxMap : MonoBehaviour
         {
             if (i != curI)
             {
-                Debug.Log("set layer :" + i);
+                //Debug.Log("set layer :" + i);
                 curI = i;
                 var layer = mLayers[i];
                 //根据地图配置调整layer移动比例
                 layer.MoveScale = ParallaxConst.LayerScales[i];
                 layer.SetLayerData(layerDatas[i], delegate (bool rst) {
                     i -= 1;
-                    Debug.Log("set layer i -= 1");
+                    //Debug.Log("set layer i -= 1");
                 });
             }
             yield return null;
@@ -218,6 +218,7 @@ public class ParallaxMap : MonoBehaviour
     //test
     private void test()
     {
+        Debug.Log(typeof(ParallaxMap));
         //test
         mDataManager.LoadData("conf/obj/test/testObjs.asset", delegate (bool rst) {
             Debug.Log("load Obj list:" + rst.ToString());
@@ -244,10 +245,10 @@ public class ParallaxMap : MonoBehaviour
             });
 
             //mDataManager = ObjDataManager.Instance;
-            if (null != mDataManager)
-            {
-                Debug.Log(mDataManager.mDatas);
-            }
+            //if (null != mDataManager)
+            //{
+            //    Debug.Log(mDataManager.mDatas);
+            //}
         });
     }
 }

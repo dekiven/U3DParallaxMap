@@ -37,7 +37,7 @@ public class ParallaxLayer : MonoBehaviour {
     public void FoucsTo(float posX)
     {
         var pos = transform.position;
-        pos.x = posX * MoveScale;
+        pos.x = -posX * MoveScale;
         transform.position = pos;
     }
 
@@ -60,6 +60,7 @@ public class ParallaxLayer : MonoBehaviour {
             {
                 var d = mCurData.Items[i];
                 var obj = Tools.NewComponentObj<RenderObj>(transform, "obj_" + i);
+                //var obj = Tools.NewGenericComponentObj<RenderObj>("RenderObj", transform, "obj_" + i);
                 if (null != obj )
                 {
                     obj.InitByID(d.ID);

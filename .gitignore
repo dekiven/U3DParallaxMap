@@ -2,6 +2,8 @@ Library/
 Temp/
 UnityPackageManager/
 obj/
+Assets/test/
+Assets/test.meta
 .vs/
 *.csproj
 *.sln

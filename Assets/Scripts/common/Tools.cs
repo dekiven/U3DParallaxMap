@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 public class Tools
@@ -237,6 +238,32 @@ public class Tools
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
         return obj.AddComponent<T>();
+    }
+
+    //根据组件名“comName”生成新的带comName组件的Gameobject，comName组件是泛型T的子类
+    public static T NewGenericComponentObj<T>(string comName, Transform parent, string name=null) where T :UnityEngine.Component
+    {
+        T component = null;
+        Type type = typeof(Tools);
+        if (null != type)
+        {
+            MethodInfo method = type.GetMethod("NewComponentObj", BindingFlags.Static | BindingFlags.Public);
+            if (null != method)
+            {
+                Type GType = Type.GetType(comName);
+                if (null != GType)
+                {
+                    var obj = method.MakeGenericMethod(new Type[] { GType, }).Invoke(type, new object[] { parent, name });
+                    component = obj as T;
+                    if (null != component)
+                    {
+                        Debug.Log(component.transform);
+                    }
+                }
+
+            }
+        }
+        return component;
     }
 
 
