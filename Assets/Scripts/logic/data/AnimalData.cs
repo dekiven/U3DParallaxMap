@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //动物数据
-public class AnimalData {
+public class AnimalData : BaseData 
+{
 
 }

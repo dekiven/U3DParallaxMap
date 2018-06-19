@@ -4,20 +4,6 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Datas/ObjDataList")]
 [Serializable]
-public class ObjDataList : BaseConfig
+public class ObjDataList : DataListBase<ObjData>
 {
-    //private List<ObjBaseData> mObjs;
-
-    ////[SerializeField]
-    //public List<ObjBaseData> Objs
-    //{
-    //get { return mObjs; }
-    //set { mObjs = value; }
-    //}
-    public List<ObjBaseData> Objs;
-
-    public ObjDataList()
-    {
-        Objs = new List<ObjBaseData>();
-    }
 }

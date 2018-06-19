@@ -3,9 +3,9 @@ using UnityEngine;
 
 //[CreateAssetMenu(menuName = "Datas/ObjData")]
 [Serializable]
-public class ObjBaseData //: BaseConfig 
+public class ObjData : BaseData
 {
-    public string ID;
+    //public string ID;
     public string Name;
     //public float HP;
     public string Type;

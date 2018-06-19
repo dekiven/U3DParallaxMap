@@ -31,7 +31,7 @@ public class ParallaxMap : MonoBehaviour
      *近景层：将玩家遮挡的层， 定义该层的深度和在list的index最小（0）
      **/
     public int LayerCount = Enum.GetNames(typeof(ParallaxLayerEnum)).Length;
-    private ObjDataManager mDataManager;
+    private DataManagers mDataManagers;
 
     //视差节点层
     private List<ParallaxLayer> mLayers;
@@ -47,7 +47,7 @@ public class ParallaxMap : MonoBehaviour
 
     private void Awake()
     {
-        mDataManager = ObjDataManager.Instance;
+        mDataManagers = DataManagers.Instance;
 
     }
 
@@ -220,7 +220,7 @@ public class ParallaxMap : MonoBehaviour
     {
         Debug.Log(typeof(ParallaxMap));
         //test
-        mDataManager.LoadData("conf/obj/test/testObjs.asset", delegate (bool rst) {
+        mDataManagers.ObjDataManager.LoadData("conf/obj/test/testObjs.asset", delegate (bool rst) {
             Debug.Log("load Obj list:" + rst.ToString());
             if (!rst)
             {
