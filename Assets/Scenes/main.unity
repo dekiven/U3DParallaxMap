@@ -161,6 +161,7 @@ MonoBehaviour:
   HorizontalHeight: 1.2
   FoucsPosX: 0
   LayerCount: 6
+  Distance: 0
   ScreenWidth: 0
 --- !u!1 &1983225179
 GameObject:

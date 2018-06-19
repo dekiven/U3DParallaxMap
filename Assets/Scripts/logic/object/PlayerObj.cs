@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,13 +18,23 @@ public class PlayerObj : RenderObj {
 	
 	// Update is called once per frame
 	void Update () {
-        float h = Input.GetAxis("Horizontal");
-        float x = transform.localPosition.x + h;
+        updatePos();
+	}
+
+    public void MoveX(float offset)
+    {
+        float x = transform.localPosition.x + offset;
         MaxPosX = Map.Distance;
-        if (!Equals(h, 0f) && Map && x > MinPosX && x < MaxPosX)
+        if (!Equals(offset, 0f) && Map && x > MinPosX && x < MaxPosX)
         {
-            transform.Translate(h, 0, 0);
+            transform.Translate(offset, 0, 0);
             Map.FoucsTo(transform.localPosition.x);
         }
-	}
+    }
+
+    private void updatePos()
+    {
+        float h = Input.GetAxis("Horizontal");
+        MoveX(h);
+    }
 }

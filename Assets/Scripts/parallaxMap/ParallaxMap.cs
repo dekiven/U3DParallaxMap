@@ -164,7 +164,7 @@ public class ParallaxMap : MonoBehaviour
         Distance = mCurMapData.Distance;
 
         //创建地图
-        var layerDatas = mCurMapData.GenLayerDatas(BaseConfig.NewConifg<EnviromentData>());
+        var layerDatas = mCurMapData.GenLayerDatas(new EnviromentData());
         int i = mLayers.Count - 1;
         int curI = -10086;
         while (i > -1)

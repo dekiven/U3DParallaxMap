@@ -45,5 +45,18 @@ public class RenderObj : MonoBehaviour {
         return true;
     }
 
-    //public 
+    public bool OnTriggerEnter2D(ObjTrigger2D trigger2D, Collider2D collider)
+    {
+        return false;
+    }
+
+    public bool OnTriggerStay2D(ObjTrigger2D trigger2D, Collider2D collider)
+    {
+        return false;
+    }
+
+    public bool OnTriggerExit2D(ObjTrigger2D trigger2D, Collider2D collider)
+    {
+        return false;
+    }
 }

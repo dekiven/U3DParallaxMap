@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class DataManagerBase<D, L> where D : BaseData where L : DataListBase<D>
+public class DataManagerBase<D, L> where D : BaseData where L : BaseDataList<D>
 {
     private static DataManagerBase<D, L> sInstance;
 
@@ -25,7 +25,8 @@ public class DataManagerBase<D, L> where D : BaseData where L : DataListBase<D>
 
     private DataManagerBase()
     {
-        mDatas = new Dictionary<string, D>();
+        //mDatas = new Dictionary<string, D>();
+        Clear();
     }
 
     public void LoadData(string path, Action<bool> callback = null)
@@ -58,4 +59,8 @@ public class DataManagerBase<D, L> where D : BaseData where L : DataListBase<D>
         return data;
     }
 
+    public void Clear()
+    {
+        mDatas = new Dictionary<string, D>();
+    }
 }

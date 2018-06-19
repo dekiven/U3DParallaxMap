@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
+[Serializable]
 //动物数据
 public class AnimalData : BaseData 
 {

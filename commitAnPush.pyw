@@ -75,7 +75,7 @@ git push
 '''%(msg))
     # print(rst)
     if len(rst) == 0 :
-        ShowInfoDialog('使用本工具仅mac上使用！')
+        ShowInfoDialog('本工具仅mac上使用！')
         logLabel.quit()
     log = 'log:\n'
     for l in rst :
